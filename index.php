@@ -3,7 +3,7 @@
 
 <?php require_once 'includes/data.php'; ?>
 
-<div id="articles">
+<div id="articles-page">
         <section>
           <h2>Nos annonces de maison</h2>
           <div id="house-container">

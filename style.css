@@ -12,31 +12,39 @@
 }
 
 
-html,body {
+
+
+/**********************COMMUN***********************/
+html,
+body {
   height: 100%;
   width: 100%;
-    display: flex;
+  display: flex;
   flex-direction: column;
 
-   background-color: var(--main-bg);
-
+  background-color: var(--main-bg);
 }
 
 main {
   height: 100%;
   width: 100%;
+
+    font-family: "Nata Sans", sans-serif;
+  font-optical-sizing: auto;
+  
+  font-style: normal;
 }
 
 a {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
-
+/**********************NAV ***********************/
 nav {
   background-color: var(--scnd-bg);
   height: 100px;
   width: 100%;
- 
+
   top: 0;
   z-index: 100;
 
@@ -47,7 +55,7 @@ nav {
 
 nav h1 {
   padding: var(--padding);
-  font-size: 1rem;
+  font-size: 3rem;
 }
 #links {
   padding: var(--padding);
@@ -55,13 +63,17 @@ nav h1 {
   gap: 10px;
 }
 
-.link {
-  background-color: var(--thrd-bg);
-  padding: 10px;
-  border-radius: 5px;
-}
 
-#articles {
+
+
+
+/**********************PAGE PRINCIPALE AVEC ARTICLES***********************/
+
+h2{
+  padding: var(--padding);
+  font-size: 2rem;
+}
+#articles-page{
   margin-top: 100px;
 }
 
@@ -69,23 +81,28 @@ nav h1 {
 #appartement-container {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 10px;
   padding: var(--padding);
 }
 
 article {
   width: calc(100vw / 3);
   height: 500px;
+
   background-color: var(--scnd-bg);
-  padding: 5px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 
-  position: relative;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+article:hover {
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  transform: scale(1.05);
+}
 article header {
   height: 80%;
   width: 100%;
@@ -98,13 +115,26 @@ article header img {
   object-fit: cover;
 }
 article header .type {
-  background-color: var(--thrd-bg);
-  width: 100px;
+  width: 175px;
+  height: 60px;
+
   position: absolute;
   bottom: 0;
   right: 0;
   text-align: center;
-  padding: 5px;
+
+  border-top-left-radius: 20px;
+  border: 2px solid var(--main-bg);
+
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(2px);
+
+  /* pour centrer le texte */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  text-transform: uppercase;
 }
 
 article div {
@@ -112,84 +142,85 @@ article div {
   justify-content: space-between;
 }
 
+button, .link{
+  padding: 10px 20px;
+  background-color: var(--main-bg);
 
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
+button:hover, .link:hover{
+  background-color: var(--thrd-bg);
+  transform: scale(1.02);
+}
+/**********************FOOTER ***********************/
 
 footer {
-
   width: 100%;
   background-color: var(--scnd-bg);
   padding: 20px;
   text-align: center;
 }
 
-/**********************LOGIN ***********************/
+/**********************LAUTHENTIFICATION ***********************/
 
-.auth-page{
+.auth-page {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.auth-container{
-  height: 350px;
+.auth-container {
+  height: 450px; 
   width: 400px;
 
-  
- background-color: var(--scnd-bg);
-border-radius: var(--border-raduis);
+  background-color: var(--scnd-bg);
+  border-radius: var(--border-raduis);
 
   display: flex;
   flex-direction: column;
-
   align-items: center;
+
   padding: 10px;
+
 }
-.auth-container h2{
+.auth-container h2 {
+  padding: 0;
+  font-size: 1.25rem;
   padding-top: 20px;
   padding-bottom: 80px;
 }
 
-form{
+form {
   height: 100%;
-   display: flex;
+  display: flex;
   flex-direction: column;
-    justify-content: space-around;
- 
+  justify-content: space-between;
+
+  width: 100%;
   
-  
- width: 100%;
 }
 
-form label{
- 
-}
+
 form input {
   width: 80%;
-  height: 20px;
-  border-radius: 3px; 
-  border: 2px solid var(--main-bg); 
+  height: 25px;
+  border-radius: 3px;
+  border: 2px solid var(--main-bg);
+  /* transform: translateY(-15px); */
 }
 
-form button {
-    padding: 10px 20px;
-    background-color:var(--main-bg);
-    
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+.auth-container p{
+  font-size: 0.9rem;
+  color: var(--thrd-bg);
 }
-
-form button:hover {
-    background-color: var(--thrd-bg);
-    transform: scale(1.05);
-}
-
-.error{
-    color: red;           
-    font-size: 0.9em;     
-    margin-top: 5px;      
-    display: block;       
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  display: block;
 }
