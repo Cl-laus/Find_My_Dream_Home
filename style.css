@@ -1,0 +1,119 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --main-bg: rgb(175, 175, 175);
+  --scnd-bg: rgb(204, 204, 204);
+  --thrd-bg: rgb(248, 248, 248);
+  --padding: 50px;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+main {
+  background-color: var(--main-bg);
+}
+nav {
+  background-color: var(--scnd-bg);
+  height: 100px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+
+}
+nav h1 {
+  padding: var(--padding);
+  font-size: 1rem;
+}
+#links {
+  padding: var(--padding);
+  display: flex;
+  gap: 10px;
+}
+
+.link{
+    background-color: var(--thrd-bg);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+
+
+
+
+
+#articles{
+    margin-top: 100px;
+    
+}
+
+#house-container, #appartement-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: var(--padding);
+ 
+}
+
+article{
+width: calc(100vw / 3);
+  height: 500px; 
+  background-color: var(--scnd-bg);
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+
+position: relative;
+   display: flex;
+  flex-direction: column;
+}
+
+
+article header{
+  height:80%;        
+  width: 100%;  
+    position: relative;
+}
+
+article header img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+article header .type{
+    background-color: var(--thrd-bg);
+    width: 100px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    padding: 5px;
+}
+
+  
+article div{
+    display: flex;
+    justify-content: space-between;
+}
+
+    
+
+footer{
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--scnd-bg);
+}
