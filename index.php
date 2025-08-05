@@ -1,34 +1,15 @@
 
+<?php require_once 'includes/header.php'; ?>
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agence Immobiliere</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
+<?php require_once 'includes/data.php'; ?>
 
-    <?php include 'data.php'; ?>
-
-
-    <main>
-      <nav>
-        <h1>Find My Dream Home</h1>
-        <div id="links">
-          <div class="link">House</div>
-          <div class="link">Appartement</div>
-          <div class="link"><a href="login.php">Login</a></div>
-        </div>
-      </nav>
-      <div id="articles">
+<div id="articles">
         <section>
           <h2>Nos annonces de maison</h2>
           <div id="house-container">
              <?php
             foreach ($houses as $product) {
-                include "createArticle.php";
+                include "includes/createArticle.php";
             }
         ?>
           </div>
@@ -38,13 +19,11 @@
           <div id="appartement-container">
           <?php
             foreach ($appartements as $product) {
-                include "createArticle.php";
+                include "includes/createArticle.php";
             }
         ?>
           </div>
         </section>
-      </div>
-    <?php require_once 'includes/footer.php'; ?>
-    </main>
-  </body>
-</html>
+</div>
+
+<?php require_once 'includes/footer.php'; ?>

@@ -8,10 +8,12 @@
 
         <label for="password">Mot de passe</label>
         <input type="password" name="password" id="password" required/>
+        <label for="password">confirmation Mot de passe</label>
+        <input type="password" name="password" id="password" required/>
 
-        <button>Se connecter</button>
+        <button>Creer un compte</button>
       </form>
-      <p><a href="register.php">Pas encore de compte ? Inscrivez-vous</a></p>
+      <p><a href="login.php">Déjà inscrit ? Connectez-vous</a></p>
   </div>
 </div>
 <?php require_once 'includes/footer.php'; ?>

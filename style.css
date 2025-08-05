@@ -11,21 +11,26 @@
   --border-raduis: 10px;
 }
 
-body {
+html,body {
   height: 100%;
   width: 100%;
+    display: flex;
+  flex-direction: column;
+
+   background-color: var(--main-bg);
 
 }
 
 main {
-  background-color: var(--main-bg);
+  height: 100%;
+  width: 100%;
 }
 
 nav {
   background-color: var(--scnd-bg);
   height: 100px;
   width: 100%;
-  position: fixed;
+ 
   top: 0;
   z-index: 100;
 
@@ -101,34 +106,31 @@ article div {
   justify-content: space-between;
 }
 
-footer {
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--scnd-bg);
-}
+
+
 
 footer {
-  /* position: fixed;
-  bottom: 0;
-  left: 0; */
+
   width: 100%;
-  background:var(--scnd-bg);
+  background-color: var(--scnd-bg);
   padding: 20px;
   text-align: center;
 }
 
 /**********************LOGIN ***********************/
 
+#login-page{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .login-container{
   height: 350px;
   width: 400px;
 
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  
+ background-color: var(--scnd-bg);
 
   border-radius: var(--border-raduis);
 
@@ -151,16 +153,13 @@ form{
 }
 
 
-form input{
+form input {
+  width:50%;
   margin-bottom: 10px;
-  width: 50;
 }
 
-form button{
-  width: 50px;
+form button {
+  width: 100px;
   padding: 5px;
+  align-self: center;
 }
-/* position: absolute;
-top: 90%;
-left: 50%;
-transform: translate(-50%, -50%); */
