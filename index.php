@@ -4,8 +4,10 @@
 
 <body>
   <main>
-<?php require_once 'includes/_nav.php'; ?>
+<?php require_once 'includes/_nav.php'; 
 
+
+?>
 <div id="articles-page">
         <section>
           <h2>Nos annonces de maison</h2>

@@ -1,3 +1,8 @@
+<?php require_once 'includes/_header.php'; ?>
+<body>
+  <main>
+<?php require_once 'includes/_nav.php'; ?>
+
 <?php
     $errors = [];
 
@@ -21,7 +26,9 @@
         // verifiction des ID(TEMPORAIRE/ a lier une bdd plus tard)
         if (empty($errors)) {
             if ($email == "admin@gmail.com" && $password == "motdepasse") {
+                
                 $_SESSION['isLoggedIn'] = true;
+                
                 header('Location: index.php');
                 exit;
             }else{
@@ -36,10 +43,6 @@
 
 
 
-<?php require_once 'includes/_header.php'; ?>
-<body>
-  <main>
-<?php require_once 'includes/_nav.php'; ?>
 
 <div class ="auth-page" id="login-page">
   <div class ="auth-container" id="login-container">

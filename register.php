@@ -1,3 +1,11 @@
+<?php require_once 'includes/_header.php'; ?>
+<!-- <script src="script/check_auth.js" defer></script> -->
+<body>
+    <main>
+
+<?php require_once 'includes/_nav.php'; ?>
+
+
 <?php
     $errors = [];
     // Validation
@@ -23,27 +31,25 @@
             $errors['confirmPassword'] = "Le mot de passe de confirmation ne correspond pas";
 
         }
+        if (empty($errors)) {
+            $errors['Status'] = "Votre annonce est en cours de traitement.";
+        }
+
     }
 
 ?>
 
 
-<?php require_once 'includes/_header.php'; ?>
-<!-- <script src="script/check_auth.js" defer></script> -->
-<body>
-    <main>
-
-<?php require_once 'includes/_nav.php'; ?>
 
 <div class ="auth-page" id="register-page">
   <div class ="auth-container" id="register-container">
       <h2>Connexion à Find My Dream Home</h2>
      <!-- Affichage du message d'envoi si pas d'erreurs -->
-      <?php if (empty($errors)): ?>
-      <p class="validMsg">Votre annonce est en cours de traitement.</p>
-      <?php endif; ?>
+    <p class="validMsg">
+        <?php echo $errors['Status'] ?? '' ?>
+    </p>
 
-      
+
       <form action="" method ='post'>
         <label for="email">Email</label>
         <input type="email" name="email" id="email" required/>
