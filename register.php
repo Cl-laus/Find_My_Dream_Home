@@ -15,8 +15,8 @@
 
         if (empty($password)) {
             $errors['password'] = "Le mot de passe est requis";
-        } elseif (strlen($password) < 6) {
-            $errors['password'] = "Le mot de passe doit contenir au moins 6 caractères";
+        } elseif (strlen($password) < 8) {
+            $errors['password'] = "Le mot de passe doit contenir au moins 8 caractères";
         }
 
         if ($confirmPassword !== $password) {
@@ -28,39 +28,53 @@
 ?>
 
 
-
 <?php require_once 'includes/_header.php'; ?>
+<!-- <script src="script/check_auth.js" defer></script> -->
 <body>
-  <main>
+    <main>
+
 <?php require_once 'includes/_nav.php'; ?>
 
 <div class ="auth-page" id="register-page">
   <div class ="auth-container" id="register-container">
       <h2>Connexion à Find My Dream Home</h2>
+     <!-- Affichage du message d'envoi si pas d'erreurs -->
+      <?php if (empty($errors)): ?>
+      <p class="validMsg">Votre annonce est en cours de traitement.</p>
+      <?php endif; ?>
+
+      
       <form action="" method ='post'>
         <label for="email">Email</label>
         <input type="email" name="email" id="email" required/>
+        <!-- Affichage de l'erreur -->
 
-  <!-- Affichage de l'erreur pour l'email si elle existe -->
-        <?php if (isset($errors['email'])): ?>
-            <span class="error"><?php echo $errors['email']; ?></span>
-        <?php endif; ?>
+            <span class="error" id="emailError">
+                <?php echo $errors['email'] ?? '' ?>
+                <!-- affiche l'erreur"email" si elle est presente. Sinon chaine vide -->
+            </span>
+
+
 
         <label for="password">Mot de passe</label>
         <input type="password" name="password" id="password" required/>
 
-  <!-- Affichage de l'erreur pour le mdp si elle existe -->
-        <?php if (isset($errors['password'])): ?>
-            <span class="error"><?php echo $errors['password']; ?></span>
-        <?php endif; ?>
+
+  <!-- Affichage de l'erreur -->
+            <span class="error" id="passwordError">
+                <?php echo $errors['password'] ?? '' ?>
+            </span>
+
 
         <label for="confirm-password">Confirmation Mot de passe</label>
         <input type="password" name="confirm-password" id="confirm-password" required/>
 
+
   <!-- Affichage de l'erreur pour le mdp si elle existe -->
-        <?php if (isset($errors['confirmPassword'])): ?>
-            <span class="error"><?php echo $errors['confirmPassword']; ?></span>
-        <?php endif; ?>
+
+         <span class="error" id="confirmPasswordError">
+                <?php echo $errors['confirmPassword'] ?? '' ?>
+            </span>
 
         <button>Creer un compte</button>
       </form>
@@ -69,6 +83,9 @@
 </div>
 
 <?php require_once 'includes/_footer.php'; ?>
+
+
+
 
     </main>
   </body>

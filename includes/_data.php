@@ -7,7 +7,8 @@ $houses = [
         "price" => "350 000 €",
         "localisation" => "Lyon",
         "description" => "Maison spacieuse avec jardin et garage.",
-        "type" => "Sale"
+        "type" => "Sale",
+        "propertyType" => "house"
     ],
     [
         "image" => "images/maison2.jpg",
@@ -15,7 +16,8 @@ $houses = [
         "price" => "450 000 €",
         "localisation" => "Nice",
         "description" => "Maison contemporaine avec piscine et terrasse.",
-        "type" => "Sale"
+        "type" => "Sale",
+        "propertyType" => "house"
     ],
     [
         "image" => "images/maison3.jpg",
@@ -23,7 +25,8 @@ $houses = [
         "price" => "280 000 €",
         "localisation" => "Bordeaux",
         "description" => "Maison cosy avec grand jardin.",
-        "type" => "Sale"
+        "type" => "Sale",
+        "propertyType" => "house"
     ]
 ];
 
@@ -35,7 +38,8 @@ $appartements = [
         "price" => "900 €/mois",
         "localisation" => "Paris",
         "description" => "Appartement 2 pièces, proche des commodités.",
-        "type" => "Rent"
+        "type" => "Rent",
+        "propertyType" => "appartment"
     ],
     [
         "image" => "images/appartement2.jpg",
@@ -43,7 +47,8 @@ $appartements = [
         "price" => "600 €/mois",
         "localisation" => "Marseille",
         "description" => "Studio meublé idéal étudiant.",
-        "type" => "Rent"
+        "type" => "Rent",
+        "propertyType" => "appartment"
     ],
     [
         "image" => "images/appartement3.jpg",
@@ -51,7 +56,8 @@ $appartements = [
         "price" => "1 200 €/mois",
         "localisation" => "Lille",
         "description" => "Appartement 3 pièces avec balcon exposé sud.",
-        "type" => "Sale"
+        "type" => "Sale",
+        "propertyType" => "appartment"
     ]
 ];
 ?>

@@ -6,13 +6,12 @@
 :root {
   --main-bg: rgb(224, 224, 224);
   --scnd-bg: rgb(255, 255, 255);
-  --thrd-bg: rgb(0, 204, 255);
+  --txt_color:rgb(0, 0, 0);
+  --txt_color2:rgb(73, 73, 73);
+  --color-blue: rgb(0, 204, 255);
   --padding: 50px;
   --border-raduis: 10px;
 }
-
-
-
 
 /**********************COMMUN***********************/
 html,
@@ -29,9 +28,9 @@ main {
   height: 100%;
   width: 100%;
 
-    font-family: "Nata Sans", sans-serif;
+  font-family: "Nata Sans", sans-serif;
   font-optical-sizing: auto;
-  
+
   font-style: normal;
 }
 
@@ -63,17 +62,13 @@ nav h1 {
   gap: 10px;
 }
 
-
-
-
-
 /**********************PAGE PRINCIPALE AVEC ARTICLES***********************/
 
-h2{
+h2 {
   padding: var(--padding);
   font-size: 2rem;
 }
-#articles-page{
+#articles-page {
   margin-top: 100px;
 }
 
@@ -100,7 +95,7 @@ article {
 }
 
 article:hover {
-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
   transform: scale(1.05);
 }
 article header {
@@ -142,7 +137,8 @@ article div {
   justify-content: space-between;
 }
 
-button, .link{
+button,
+.link {
   padding: 10px 20px;
   background-color: var(--main-bg);
 
@@ -153,8 +149,9 @@ button, .link{
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-button:hover, .link:hover{
-  background-color: var(--thrd-bg);
+button:hover,
+.link:hover {
+  background-color: var(--color-blue);
   transform: scale(1.02);
 }
 /**********************FOOTER ***********************/
@@ -167,15 +164,26 @@ footer {
 }
 
 /**********************LAUTHENTIFICATION ***********************/
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  display: block;
+}
+.invalid {
+  border: 2px solid red;
+}
 
-.auth-page {
+
+.auth-page,
+.add-page {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.auth-container {
-  height: 450px; 
+.auth-container,.add-container {
+  height: 450px;
   width: 400px;
 
   background-color: var(--scnd-bg);
@@ -186,41 +194,55 @@ footer {
   align-items: center;
 
   padding: 10px;
-
 }
-.auth-container h2 {
+.auth-container h2,
+.add-container h2 {
   padding: 0;
   font-size: 1.25rem;
   padding-top: 20px;
   padding-bottom: 80px;
 }
 
-form {
+form{
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  width: 100%;
-  
+  width: 100%
 }
 
-
-form input {
-  width: 80%;
+form input, form textarea, form select{
+  
   height: 25px;
   border-radius: 3px;
   border: 2px solid var(--main-bg);
-  /* transform: translateY(-15px); */
+  font-family: inherit;
+
 }
 
-.auth-container p{
+.auth-container p,
+.add-container p {
   font-size: 0.9rem;
-  color: var(--thrd-bg);
+  color: var(--color-blue);
 }
-.error {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 5px;
-  display: block;
+
+/**********************ADD page ***********************/
+.add-container {
+  height: 750px;
+}
+form textarea {
+  
+  resize: none;
+  outline: none;          
+  
+        
+  height: 100px;
+  
+
+}
+form select {
+  
+
+   font-size: 0.85rem;
+   color: var(--txt_color2);
 }

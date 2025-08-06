@@ -13,6 +13,8 @@
                        ?>>
           <div class="link"><a href="#house-container">House</a></div>
           <div class="link"><a href="#appartement-container">Appartement</a></div>
+          <div class="link"><a href="add.php">Add</a></div>
           <div class="link"><a href="login.php">Login</a></div>
+          <div class="link">Logout</div>
         </div>
 </nav>
