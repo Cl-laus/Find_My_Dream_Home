@@ -1,35 +1,39 @@
 <?php
-$errors = [];
- 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-    $confirmPassword = trim($_POST['confirm-password'] ?? '');
-   
-    // Validation 
-    if (empty($email)) {
-        $errors['email'] = "L'email est requis";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = "Veuillez entrer un email valide";
-    }
-   
-    if (empty($password)) {
-        $errors['password'] = "Le mot de passe est requis";
-    } elseif (strlen($password) < 6) {
-        $errors['password'] = "Le mot de passe doit contenir au moins 6 caractères";
+    $errors = [];
+    // Validation
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email           = trim($_POST['email'] ?? '');
+        $password        = trim($_POST['password'] ?? '');
+        $confirmPassword = trim($_POST['confirm-password'] ?? '');
+
+        if (empty($email)) {
+            $errors['email'] = "L'email est requis";
+        } elseif (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = "Veuillez entrer un email valide";
+        }
+
+        if (empty($password)) {
+            $errors['password'] = "Le mot de passe est requis";
+        } elseif (strlen($password) < 6) {
+            $errors['password'] = "Le mot de passe doit contenir au moins 6 caractères";
+        }
+
+        if ($confirmPassword !== $password) {
+            $errors['confirmPassword'] = "Le mot de passe de confirmation ne correspond pas";
+
+        }
     }
 
-    if ($confirmPassword !== $password) {
-        $errors['confirmPassword'] = "Le mot de passe de confirmation ne correspond pas";
-
-    }
-}
- 
 ?>
 
 
 
-<?php require_once 'includes/header.php'; ?>
+<?php require_once 'includes/_header.php'; ?>
+<body>
+  <main>
+<?php require_once 'includes/_nav.php'; ?>
+
 <div class ="auth-page" id="register-page">
   <div class ="auth-container" id="register-container">
       <h2>Connexion à Find My Dream Home</h2>
@@ -39,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- Affichage de l'erreur pour l'email si elle existe -->
         <?php if (isset($errors['email'])): ?>
-            <span class="error"><?= $errors['email']; ?></span>
+            <span class="error"><?php echo $errors['email']; ?></span>
         <?php endif; ?>
 
         <label for="password">Mot de passe</label>
@@ -47,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- Affichage de l'erreur pour le mdp si elle existe -->
         <?php if (isset($errors['password'])): ?>
-            <span class="error"><?= $errors['password']; ?></span>
+            <span class="error"><?php echo $errors['password']; ?></span>
         <?php endif; ?>
 
         <label for="confirm-password">Confirmation Mot de passe</label>
@@ -55,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- Affichage de l'erreur pour le mdp si elle existe -->
         <?php if (isset($errors['confirmPassword'])): ?>
-            <span class="error"><?= $errors['confirmPassword']; ?></span>
+            <span class="error"><?php echo $errors['confirmPassword']; ?></span>
         <?php endif; ?>
 
         <button>Creer un compte</button>
@@ -64,4 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once 'includes/_footer.php'; ?>
+
+    </main>
+  </body>
+</html>
