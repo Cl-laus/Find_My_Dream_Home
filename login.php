@@ -32,7 +32,7 @@
                 header('Location: index.php');
                 exit;
             }else{
-                $errors['loggedIn'] ="les identifiants sont incorrects";
+                $errors['notLogged'] ="les identifiants sont incorrects";
             }
         }
     }
@@ -49,7 +49,7 @@
       <h2>Connexion à Find My Dream Home</h2>
         <!-- Affichage de l'erreur si IDs pas correct avec la BDD-->
             <span class="error" id="emailError">
-                <?php echo $errors['loggedIn'] ?? '' ?>
+                <?php echo $errors['notLogged'] ?? '' ?>
                 
             </span>
       <form action="" method ='post'>
