@@ -7,7 +7,7 @@
     $user_id   = $_SESSION['id'];
     $user_role = $_SESSION['role'];
     // Vérifier si l'utilisateur est connecté
-    if (empty($_SESSION['isLoggedIn']) || ($user_role !== "admin" && $user_role !== "agent")){
+    if (empty($_SESSION['isLoggedIn']) || ($user_role !== "admin" && $user_role !== "agent")) {
         //  redirection
         $_SESSION['error_message'] = "Vous devez être connecté en tant qu'agent ou admin pour accéder à cette page.";
         header('Location: index.php');
@@ -19,7 +19,7 @@
     $errors = [];
 
     // Validation
-
+   
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title            = trim($_POST['title'] ?? '');
         $image_url        = trim($_POST['image_url'] ?? '');
@@ -62,36 +62,37 @@
         if (empty($transaction_type)) {
             $errors['transaction_type'] = "selectionner un type";
         }
+    }
 
-        // ENVOI DES DONNEES SI PAS ERREURS
 
-        if (empty($errors) && ($_SESSION['isLoggedIn'])) {
+    // ENVOI DES DONNEES SI PAS ERREURS
 
-            // Préparer lA DATE AU FORMAT SQL
-            $now = date('Y-m-d H:i:s');
+    if (empty($errors) && ($_SESSION['isLoggedIn'])) {
 
-            $stmt = $pdo->prepare("
+        // Préparer lA DATE AU FORMAT SQL
+        $now = date('Y-m-d H:i:s');
+
+        $stmt = $pdo->prepare("
                 INSERT INTO listing
                 (title, description, price, location, image_url, property_type_id, transaction_type_id, user_id, created_at, updated_at)
                 VALUES
                 (:title, :description, :price, :location, :image_url, :property_type_id, :transaction_type_id, :user_id, :created_at, :updated_at)
                 ");
-    // LIE LES VALEURS, pour secure
-            $stmt->bindValue(':title', $title);
-            $stmt->bindValue(':description', $description);
-            $stmt->bindValue(':price', $price, PDO::PARAM_INT);
-            $stmt->bindValue(':location', $location);
-            $stmt->bindValue(':image_url', $image_url);
-            $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
-            $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
-            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-            $stmt->bindValue(':created_at', $now);
-            $stmt->bindValue(':updated_at', $now);
-    // envoie des données
-            $stmt->execute();
+        // LIE LES VALEURS, pour secure
+        $stmt->bindValue(':title', $title);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':price', $price, PDO::PARAM_INT);
+        $stmt->bindValue(':location', $location);
+        $stmt->bindValue(':image_url', $image_url);
+        $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
+        $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':created_at', $now);
+        $stmt->bindValue(':updated_at', $now);
+        // envoie des données
+        $stmt->execute();
 
-            $success = "Votre annonce a bien été enregistrée.";
-        }
+        $success = "Votre annonce a bien été enregistrée.";
     }
 
 ?>

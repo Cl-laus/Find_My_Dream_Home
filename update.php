@@ -7,17 +7,8 @@
 
     $user_id   = $_SESSION['id'];
     $user_role = $_SESSION['role'];
+    $articleId = $_GET['id'];
 
-    $errors = [];
-
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $articleId = trim($_GET['id']);
-    } else {
-        // id manquant -> redirection ou message d'erreur
-        $_SESSION['error_message'] = "ID de l'annonce manquant.";
-        header('Location: index.php');
-        exit;
-    }
     // recuperes les datas avec l'id correspondant
     $sql = 'SELECT l.*,
                    pt.name AS property_type,
@@ -33,18 +24,129 @@
 
     $product = $stmt->fetch();
 
+    $title            = $product['title'];
+    $image_url        = $product['image_url'];
+    $price            = $product['price'];
+    $location         = $product['location'];
+    $description      = $product['description'];
+    $property_type    = $product['property_type_id'];
+    $transaction_type = $product['transaction_type_id'];
+
     if (empty($_SESSION['isLoggedIn']) || ! ($user_role === "admin" || $user_id === $product['user_id'])) {
         //  redirection si pas les droits de modifier
         $_SESSION['error_message'] = "Vous devez être connecté en tant qu' admin ou etre le créateur pour modifier cette annonce.";
         header('Location: index.php');
         exit;
-    } else {
 
     }
+?>
+<?php
+    $errors = [];
+
+    // Validation
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $title            = trim($_POST['title'] ?? '');
+        $image_url        = trim($_POST['image_url'] ?? '');
+        $price            = trim($_POST['price'] ?? '');
+        $location         = trim($_POST['location'] ?? '');
+        $description      = trim($_POST['description'] ?? '');
+        $property_type    = $_POST['property_type'] ?? '';
+        $transaction_type = $_POST['transaction_type'] ?? '';
+
+        if (empty($title)) {
+            $errors['title'] = "Un titre est requis";
+        } elseif ((strlen($title) < 2) || ((strlen($title) > 50))) {
+            $errors['title'] = "Le titre est trop court ou trop long";
+        }
+        if (empty($image_url)) {
+            $errors['url'] = "L'URL de l'image est requise";
+            // validation de l'url
+        } elseif (! filter_var($image_url, FILTER_VALIDATE_URL)) {
+            $errors['url'] = "L'URL fournie n'est pas valide";
+        }
+        if (empty($price)) {
+            $errors['price'] = "Le prix est requis";
+        } elseif ((int) $price <= 0) {
+            $errors['price'] = "Le prix doit être un entier positif";
+        }
+        if (empty($location)) {
+            $errors['location'] = "Une ville est requis";
+        } elseif ((strlen($location) < 2) || ((strlen($location) > 50))) {
+            $errors['location'] = "l'entrée n'est pas valide";
+        }
+
+        if (empty($description)) {
+            $errors['description'] = "Une description est requis";
+        } elseif (strlen($description) < 5) {
+            $errors['description'] = "la description n'est pas conforme";
+        }
+        if (empty($property_type)) {
+            $errors['property_type'] = "selectionner un type";
+        }
+        if (empty($transaction_type)) {
+            $errors['transaction_type'] = "selectionner un type";
+        }
+    }
+
+    // update DES DONNEES SI PAS ERREURS
+
+    if (empty($errors)) {
+
+        // Préparer lA DATE AU FORMAT SQL
+        $now = date('Y-m-d H:i:s');
+
+        $stmt = $pdo->prepare("
+                UPDATE listing SET
+        title = :title,
+        description = :description,
+        price = :price,
+        location = :location,
+        image_url = :image_url,
+        property_type_id = :property_type_id,
+        transaction_type_id = :transaction_type_id,
+        updated_at = :updated_at
+    WHERE id = :articleId
+                ");
+        // LIE LES VALEURS, pour secure
+        $stmt->bindValue(':title', $title);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':price', $price, PDO::PARAM_INT);
+        $stmt->bindValue(':location', $location);
+        $stmt->bindValue(':image_url', $image_url);
+        $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
+        $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
+        $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
+
+        $stmt->bindValue(':updated_at', $now);
+    // envoie des données
+        $stmt->execute();
+
+    // Maj des données dans le HTML
+
+$sql = 'SELECT l.*,
+               pt.name AS property_type,
+               tt.name AS transaction_type
+        FROM listing l
+        JOIN propertyType pt ON l.property_type_id = pt.id
+        JOIN transactionType tt ON l.transaction_type_id = tt.id
+        WHERE l.id = :articleId';
+
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
+$stmt->execute();
+$product = $stmt->fetch();
+
+// PETIT MSG DE valid
+        
+        $_SESSION['success'] = "Votre annonce a bien été update.";
+    }
+
 ?>
 
 
 
+<!-- ////////////////////HTML //////////////////////-->
 
 
 <body>
@@ -53,10 +155,17 @@
 
         <div class="add-page" id="add-page">
             <div class="add-container" id="add-container">
-                <h2>New Add</h2>
+                <h2>Mettre à jour</h2>
                 <!-- Affichage du message d'envoi si pas d'erreurs -->
 
-                <p class="validMsg"><?php echo $success ?? '' ?></p>
+                <p class="validMsg">
+                    <?php
+                        if (! empty($_SESSION['success'])) {
+                            echo $_SESSION['success'];
+                            unset($_SESSION['success']);
+                        }
+                    ?>
+                </p>
 
                 <form action="" method="post">
                     <label for="title">Title:</label>
