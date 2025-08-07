@@ -35,8 +35,9 @@
                     if ($result) {
                         
                         $_SESSION['isLoggedIn'] = true;
-                        // recupere l'ID
+                        // recupere l'ID et le role
                         $_SESSION['id'] = $result['id'];
+                        $_SESSION['role'] = $result['role'];
                         
                         header('Location: index.php');
                         exit;
@@ -54,7 +55,7 @@
 <body>
     <main>
         <?php require_once 'includes/_nav.php'; ?>
-        
+
         <div class="auth-page" id="login-page">
             <div class="auth-container" id="login-container">
                 <h2>Connexion à Find My Dream Home</h2>

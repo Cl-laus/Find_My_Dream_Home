@@ -1,14 +1,9 @@
 <?php session_start(); ?>
 <?php require_once 'includes/_header.php'; ?>
-<?php require_once 'includes/_pdo_connect.php';?>
+<?php require_once 'includes/_pdo_connect.php'; ?>
 <!-- requete sql pour recuperer les annonces -->
 <?php
-    $sql      = 'SELECT
-    l.title,
-    l.description,
-    l.location,
-    l.image_url,
-    l.price,
+    $sql = 'SELECT l.*,
     pt.name AS property_type,
     tt.name AS transaction_type
 FROM listing l
@@ -24,27 +19,35 @@ JOIN transactionType tt ON l.transaction_type_id = tt.id;';
     <main>
         <?php require_once 'includes/_nav.php'; ?>
 
+        <span class="error" >
+         <!-- affiche un message d'erreur si on a pas les droits d'acces -->
+           <?php echo $_SESSION['error_message'] ?? '';
+           unset($_SESSION['error_message']); ?>
+       </span>
+
         <div id="articles-page">
             <section>
                 <h2>Nos annonces de maison</h2>
                 <div id="house-container">
                     <?php
-                 foreach ($products as $product) {
-                   if($product['property_type'] === 'house'){
-                     include "includes/_createArticle.php";
-                 }}
-             ?>
+                        foreach ($products as $product) {
+                            if ($product['property_type'] === 'house') {
+                                include "includes/_createArticle.php";
+                            }
+                        }
+                    ?>
                 </div>
             </section>
             <section>
                 <h2>Nos annonces d'appartement</h2>
                 <div id="appartement-container">
                     <?php
-              foreach ($products as $product) {
-              if($product['property_type'] === 'appartment'){
-                     include "includes/_createArticle.php";
-                 }}
-          ?>
+                        foreach ($products as $product) {
+                            if ($product['property_type'] === 'appartment') {
+                                include "includes/_createArticle.php";
+                            }
+                        }
+                    ?>
                 </div>
             </section>
         </div>

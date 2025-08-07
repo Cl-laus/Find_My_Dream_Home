@@ -1,11 +1,19 @@
 <?php session_start(); ?>
 <?php require_once 'includes/_header.php'; ?>
-<?php require_once 'includes/_pdo_connect.php';
-    $user_id = $_SESSION['id'];
-    // Récupérer l'ID de l'utilisateur connecté
-    var_dump($user_id)
-// ?>
+<?php require_once 'includes/_pdo_connect.php'; ?>
 
+<?php
+    // Récupérer l'ID et le role de l'utilisateur connecté, recuperés dans login
+    $user_id   = $_SESSION['id'];
+    $user_role = $_SESSION['role'];
+    // Vérifier si l'utilisateur est connecté
+    if (empty($_SESSION['isLoggedIn']) || ($user_role !== "admin" && $user_role !== "agent")){
+        //  redirection
+        $_SESSION['error_message'] = "Vous devez être connecté en tant qu'agent ou admin pour accéder à cette page.";
+        header('Location: index.php');
+        exit;
+    }
+// ?>
 
 <?php
     $errors = [];
@@ -55,7 +63,7 @@
             $errors['transaction_type'] = "selectionner un type";
         }
 
-    // ENVOI DES DONNEES SI PAS ERREURS
+        // ENVOI DES DONNEES SI PAS ERREURS
 
         if (empty($errors) && ($_SESSION['isLoggedIn'])) {
 
@@ -68,7 +76,7 @@
                 VALUES
                 (:title, :description, :price, :location, :image_url, :property_type_id, :transaction_type_id, :user_id, :created_at, :updated_at)
                 ");
-// LIE LES VALEURS, pour secure
+    // LIE LES VALEURS, pour secure
             $stmt->bindValue(':title', $title);
             $stmt->bindValue(':description', $description);
             $stmt->bindValue(':price', $price, PDO::PARAM_INT);
@@ -79,7 +87,7 @@
             $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
             $stmt->bindValue(':created_at', $now);
             $stmt->bindValue(':updated_at', $now);
-// envoie des données
+    // envoie des données
             $stmt->execute();
 
             $success = "Votre annonce a bien été enregistrée.";

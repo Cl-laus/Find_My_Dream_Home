@@ -71,6 +71,19 @@ color: white;
   border-radius: 5px;
   font-size: 16px
 }
+
+
+button,
+.link {
+  padding: 10px 20px;
+  background-color: var(--main-bg);
+
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
 /**********************PAGE PRINCIPALE AVEC ARTICLES***********************/
 
 h2 {
@@ -91,16 +104,18 @@ h2 {
 }
 
 article {
-  width: calc((100% - 20px) / 3); /* 3 colonnes, 2 gaps de 10px */
-  height: 500px;
+  width: calc((100% - 50px) / 3); /* 3 colonnes, 2 gaps de 10px */
+  height: 600px;
 
   background-color: var(--scnd-bg);
   padding: 15px;
+  gap: 10px;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
@@ -109,7 +124,7 @@ article:hover {
   transform: scale(1.05);
 }
 article header {
-  height: 80%;
+  height: 350px;
   width: 100%;
   position: relative;
 }
@@ -146,18 +161,12 @@ article div {
   display: flex;
   justify-content: space-between;
 }
-
-button,
-.link {
-  padding: 10px 20px;
-  background-color: var(--main-bg);
-
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+#button-container{
+  justify-content:end;
+  gap: 10px;
 }
+
+
 
 button:hover,
 .link:hover {
