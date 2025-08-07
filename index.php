@@ -7,7 +7,7 @@
     $sql      = 'SELECT
     l.title,
     l.description,
-    l.city,
+    l.location,
     l.image_url,
     l.price,
     pt.name AS property_type,
@@ -30,8 +30,9 @@ JOIN transactionType tt ON l.transaction_type_id = tt.id;';
           <div id="house-container">
              <?php
                  foreach ($products as $product) {
+                   if($product['property_type'] === 'house'){
                      include "includes/_createArticle.php";
-                 }
+                 }}
              ?>
           </div>
         </section>
@@ -39,9 +40,10 @@ JOIN transactionType tt ON l.transaction_type_id = tt.id;';
           <h2>Nos annonces d'appartement</h2>
           <div id="appartement-container">
           <?php
-              foreach ($appartements as $product) {
-                  include "includes/_createArticle.php";
-              }
+              foreach ($products as $product) {
+              if($product['property_type'] === 'appartment'){
+                     include "includes/_createArticle.php";
+                 }}
           ?>
           </div>
         </section>
