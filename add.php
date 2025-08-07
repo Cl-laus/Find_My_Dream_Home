@@ -1,7 +1,11 @@
+<?php session_start(); ?>
 <?php require_once 'includes/_header.php'; ?>
-<body>
-  <main>
-<?php require_once 'includes/_nav.php'; ?>
+<?php require_once 'includes/_pdo_connect.php';
+    $user_id = $_SESSION['id'];
+    // Récupérer l'ID de l'utilisateur connecté
+    var_dump($user_id)
+// ?>
+
 
 <?php
     $errors = [];
@@ -10,7 +14,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title            = trim($_POST['title'] ?? '');
-        $image_url     = trim($_POST['image_url'] ?? '');
+        $image_url        = trim($_POST['image_url'] ?? '');
         $price            = trim($_POST['price'] ?? '');
         $location         = trim($_POST['location'] ?? '');
         $description      = trim($_POST['description'] ?? '');
@@ -50,75 +54,88 @@
         if (empty($transaction_type)) {
             $errors['transaction_type'] = "selectionner un type";
         }
-        if (empty($errors)) {
-         
-            require_once 'includes/db.php'; // fichier de connexion PDO
 
-            $stmt = $pdo->prepare("INSERT INTO listing (title, image_url, price, location, description, property_type, transaction_type)
-              VALUES (:title, :image_url , :price, :location, :description, :property_type, :transaction_type)");
+    // ENVOI DES DONNEES SI PAS ERREURS
 
-            $stmt->bindValue(':title', $title );
-            $stmt->bindValue(':image_url', $image_url );
-            $stmt->bindValue(':price', $price );
-            $stmt->bindValue(':location', $location );
-            $stmt->bindValue(':description', $description );
-            $stmt->bindValue(':property_type', $property_type );
-            $stmt->bindValue(':transaction_type', $transaction_type );
+        if (empty($errors) && ($_SESSION['isLoggedIn'])) {
 
+            // Préparer lA DATE AU FORMAT SQL
+            $now = date('Y-m-d H:i:s');
+
+            $stmt = $pdo->prepare("
+                INSERT INTO listing
+                (title, description, price, location, image_url, property_type_id, transaction_type_id, user_id, created_at, updated_at)
+                VALUES
+                (:title, :description, :price, :location, :image_url, :property_type_id, :transaction_type_id, :user_id, :created_at, :updated_at)
+                ");
+// LIE LES VALEURS, pour secure
+            $stmt->bindValue(':title', $title);
+            $stmt->bindValue(':description', $description);
+            $stmt->bindValue(':price', $price, PDO::PARAM_INT);
+            $stmt->bindValue(':location', $location);
+            $stmt->bindValue(':image_url', $image_url);
+            $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
+            $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindValue(':created_at', $now);
+            $stmt->bindValue(':updated_at', $now);
+// envoie des données
             $stmt->execute();
 
-             $success = "Votre annonce a bien été enregistrée.";
+            $success = "Votre annonce a bien été enregistrée.";
         }
     }
 
 ?>
 
 
+<body>
+    <main>
+        <?php require_once 'includes/_nav.php'; ?>
 
-<div class ="add-page" id="add-page">
-  <div class ="add-container" id="add-container">
-      <h2>New Add</h2>
-      <!-- Affichage du message d'envoi si pas d'erreurs -->
-    
-    <p class="validMsg"><?php echo $success ?? '' ?></p>
+        <div class="add-page" id="add-page">
+            <div class="add-container" id="add-container">
+                <h2>New Add</h2>
+                <!-- Affichage du message d'envoi si pas d'erreurs -->
 
-          <form action="" method="post">
+                <p class="validMsg"><?php echo $success ?? '' ?></p>
+
+                <form action="" method="post">
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" minlength="5" maxlength="50" required>
-                     <!-- Affichage de l'erreur -->
-                      <span class="error" id="titleError">
+                    <!-- Affichage de l'erreur -->
+                    <span class="error" id="titleError">
                         <?php echo $errors['title'] ?? '' ?>
-                      </span>
+                    </span>
 
                     <label for="imageUpload">URL image:</label>
                     <input type="text" id="image_url" name="image_url" required>
-                        <!-- Affichage de l'erreur -->
-                      <span class="error" id="UrlError">
+                    <!-- Affichage de l'erreur -->
+                    <span class="error" id="UrlError">
                         <?php echo $errors['url'] ?? '' ?>
-                      </span>
+                    </span>
 
 
                     <label for="price">Price:</label>
-                    <input type="number" id="price" name="price" step="50"required>
-                        <!-- Affichage de l'erreur -->
-                      <span class="error" id="priceError">
+                    <input type="number" id="price" name="price" step="50" required>
+                    <!-- Affichage de l'erreur -->
+                    <span class="error" id="priceError">
                         <?php echo $errors['price'] ?? '' ?>
-                      </span>
+                    </span>
 
                     <label for="location">Ville:</label>
                     <input type="text" id="location" name="location" required>
-                        <!-- Affichage de l'erreur -->
-                      <span class="error" id="locationError">
+                    <!-- Affichage de l'erreur -->
+                    <span class="error" id="locationError">
                         <?php echo $errors['location'] ?? '' ?>
-                      </span>
+                    </span>
 
                     <label for="description">Description:</label>
-                    <textarea name="description" rows="4" cols="50" minlength="1"
-                        maxlength="255" required></textarea>
-                            <!-- Affichage de l'erreur -->
-                      <span class="error" id="descriptionError">
+                    <textarea name="description" rows="4" cols="50" minlength="1" maxlength="255" required></textarea>
+                    <!-- Affichage de l'erreur -->
+                    <span class="error" id="descriptionError">
                         <?php echo $errors['description'] ?? '' ?>
-                      </span>
+                    </span>
 
                     <label for="property_type">Type de propriété:</label>
                     <select id="property_type" name="property_type" required>
@@ -134,11 +151,11 @@
                         <option value="2">Rent</option>
                     </select>
 
-                     <button type="submit">Enregistrer</button>
-         </form>
-  </div>
-</div>
+                    <button type="submit">Enregistrer</button>
+                </form>
+            </div>
+        </div>
 
 
 
-<?php require_once 'includes/_footer.php'; ?>
+        <?php require_once 'includes/_footer.php'; ?>

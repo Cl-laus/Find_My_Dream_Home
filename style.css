@@ -84,13 +84,14 @@ h2 {
 #house-container,
 #appartement-container {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  flex-wrap: wrap;         /* Permet de passer à la ligne suivante */
+  gap: 10px;              
   padding: var(--padding);
+  justify-content: flex-start; /* Pour un alignement classique à gauche */
 }
 
 article {
-  width: calc(100vw / 3);
+  width: calc((100% - 20px) / 3); /* 3 colonnes, 2 gaps de 10px */
   height: 500px;
 
   background-color: var(--scnd-bg);
