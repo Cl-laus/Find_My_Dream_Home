@@ -1,7 +1,7 @@
 <article>
     <header>
         <img src="<?php echo $product['image_url'] ?>" alt="" />
-        <p class="type">type: <?php echo $product['transaction_type'] ?></p>
+        <p class="type"> <?php echo $product['transaction_type'] ?></p>
     </header>
     <div class="title">
         <h3><?php echo $product['title'] ?></h3>

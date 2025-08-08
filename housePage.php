@@ -7,7 +7,12 @@
     // Vérifie si l'utilisateur est connecté, sinon valeurs nulles
     $user_id   = $_SESSION['id'] ?? null;
     $user_role = $_SESSION['role'] ?? null;
+
+
+$articlePerPage = 12;
+
     // <!-- requete sql pour recuperer les annonces -->
+
     $sql = 'SELECT l.*,
     pt.name AS property_type,
     tt.name AS transaction_type
@@ -16,25 +21,12 @@ JOIN propertyType pt ON l.property_type_id = pt.id
 JOIN transactionType tt ON l.transaction_type_id = tt.id
 WHERE pt.name = "house"
 ORDER BY l.created_at DESC
-    LIMIT 3;'
+-- limit $articlePerPage 
+    ;'
 
     ;
     $stmt   = $pdo->query($sql);
     $houses = $stmt->fetchAll();
-
-    $sql = 'SELECT l.*,
-    pt.name AS property_type,
-    tt.name AS transaction_type
-FROM listing l
-JOIN propertyType pt ON l.property_type_id = pt.id
-JOIN transactionType tt ON l.transaction_type_id = tt.id
-WHERE pt.name = "appartment"
-ORDER BY l.created_at DESC
-    LIMIT 3;'
-
-    ;
-    $stmt         = $pdo->query($sql);
-    $appartements = $stmt->fetchAll();
 
 ?>
 
@@ -44,8 +36,7 @@ ORDER BY l.created_at DESC
 
         <span class="error">
             <!-- affiche un message d'erreur si on a pas les droits d'acces -->
-            <?php echo $_SESSION['index_message'] ?? '';
-           unset($_SESSION['index_message']); ?>
+
         </span>
 
         <div id="articles-page">
@@ -61,20 +52,11 @@ ORDER BY l.created_at DESC
                     ?>
                 </div>
             </section>
-            <section>
-                <h2>Nos annonces d'appartement</h2>
-                <div id="appartement-container">
-                    <?php
-                        foreach ($appartements as $product) {
-
-                            include "includes/_createArticle.php";
-
-                        }
-                    ?>
-                </div>
-            </section>
         </div>
-
+        <div class="button-nav-container">
+            <button class="button-nav">Precedent</button>
+            <button class="button-nav">Suivant</button>
+        </div>
         <?php require_once 'includes/_footer.php'; ?>
     </main>
 </body>
