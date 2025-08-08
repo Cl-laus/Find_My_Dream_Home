@@ -1,8 +1,13 @@
 <?php session_start(); ?>
 <?php require_once 'includes/_header.php'; ?>
 <?php require_once 'includes/_pdo_connect.php'; ?>
-<!-- requete sql pour recuperer les annonces -->
+
+
 <?php
+// Récupérer l'ID et le role de l'utilisateur connecté,
+    $user_id   = $_SESSION['id'];
+    $user_role = $_SESSION['role'];
+// <!-- requete sql pour recuperer les annonces -->
     $sql = 'SELECT l.*,
     pt.name AS property_type,
     tt.name AS transaction_type
