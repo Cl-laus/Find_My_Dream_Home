@@ -1,16 +1,9 @@
 <?php 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $title            = trim($_POST['title'] ?? '');
-        $image_url        = trim($_POST['image_url'] ?? '');
-        $price            = trim($_POST['price'] ?? '');
-        $location         = trim($_POST['location'] ?? '');
-        $description      = trim($_POST['description'] ?? '');
-        $property_type    = $_POST['property_type'] ?? '';
-        $transaction_type = $_POST['transaction_type'] ?? '';
+
 
         if (empty($title)) {
             $errors['title'] = "Un titre est requis";
-        } elseif ((strlen($title) < 2) || ((strlen($title) > 50))) {
+        } elseif ((strlen($title) < 5) || ((strlen($title) > 50))) {
             $errors['title'] = "Le titre est trop court ou trop long";
         }
         if (empty($image_url)) {
@@ -41,5 +34,5 @@
         if (empty($transaction_type)) {
             $errors['transaction_type'] = "selectionner un type";
         }
-    }
+    
 ?>
