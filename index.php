@@ -4,9 +4,9 @@
 
 
 <?php
-// Récupérer l'ID et le role de l'utilisateur connecté,
-    $user_id   = $_SESSION['id'];
-    $user_role = $_SESSION['role'];
+// Vérifie si l'utilisateur est connecté, sinon valeurs nulles
+$user_id   = $_SESSION['id'] ?? null;
+$user_role = $_SESSION['role'] ?? null;
 // <!-- requete sql pour recuperer les annonces -->
     $sql = 'SELECT l.*,
     pt.name AS property_type,

@@ -36,7 +36,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title            = trim($_POST['title'] ?? '');
-        $image_url        = trim($_POST['image_url'] ?? '');
+        
         $price            = trim($_POST['price'] ?? '');
         $location         = trim($_POST['location'] ?? '');
         $description      = trim($_POST['description'] ?? '');
@@ -45,6 +45,9 @@
 
         // Validation externalisé
         require 'includes/_validationFORM.php';
+
+        // envoi de l'image avec la gestion de ses erreurs
+        require 'includes/_sendImage.php';
 
         // ENVOI DES DONNEES SI PAS ERREURS
 
@@ -64,7 +67,7 @@
             $stmt->bindValue(':description', $description);
             $stmt->bindValue(':price', $price, PDO::PARAM_INT);
             $stmt->bindValue(':location', $location);
-            $stmt->bindValue(':image_url', $image_url);
+            $stmt->bindValue(':image_url', $dest);//recuperé dans _sendImage
             $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
             $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
             $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
@@ -93,7 +96,7 @@
 
                 <p class="validMsg"><?php echo $success ?? '' ?></p>
 
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" minlength="5" maxlength="50" required>
                     <!-- Affichage de l'erreur -->
@@ -101,10 +104,10 @@
                         <?php echo $errors['title'] ?? '' ?>
                     </span>
 
-                    <label for="imageUpload">URL image:</label>
-                    <input type="text" id="image_url" name="image_url" required>
+                    <label for="imageUpload">Image:</label>
+                    <input type="file" name="image" id="imageUpload" required>
                     <!-- Affichage de l'erreur -->
-                    <span class="error" id="UrlError">
+                    <span class="error" id="imageError">
                         <?php echo $errors['image'] ?? '' ?>
                     </span>
 
@@ -135,7 +138,7 @@
                         <option value="" disabled selected hidden>--select type--</option>
                         <?php foreach ($propertyTypes as $type): ?>
                         <option value="<?php echo $type['id']; ?>">
-                            <?php echo strtolower($type['name']); // formatage en minuscule ?> 
+                            <?php echo strtolower($type['name']); // formatage en minuscule ?>
                         </option>
                         <?php endforeach; ?>
                     </select>
@@ -145,7 +148,7 @@
                         <option value="" disabled selected hidden>--select type--</option>
                         <?php foreach ($transactionTypes as $type): ?>
                         <option value="<?php echo $type['id']; ?>">
-                            <?php echo strtolower( $type['name']); ?>
+                            <?php echo strtolower($type['name']); ?>
                         </option>
                         <?php endforeach; ?>
                     </select>

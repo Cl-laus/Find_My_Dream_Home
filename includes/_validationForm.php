@@ -6,12 +6,7 @@
         } elseif ((strlen($title) < 5) || ((strlen($title) > 50))) {
             $errors['title'] = "Le titre est trop court ou trop long";
         }
-        if (empty($image_url)) {
-            $errors['image'] = "une image est requise";
-            // validation de l'url
-        } elseif (! filter_var($image_url, FILTER_VALIDATE_URL)) {
-            $errors['image'] = "L'image fournie n'est pas valide";
-        }
+       
         if (empty($price)) {
             $errors['price'] = "Le prix est requis";
         } elseif ((int) $price <= 0) {

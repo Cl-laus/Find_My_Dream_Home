@@ -61,16 +61,28 @@
     $errors = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title            = trim($_POST['title'] ?? '');
-        $image_url        = trim($_POST['image_url'] ?? '');
+       //l'URL de l'image est recuperer dans _sendImage
         $price            = trim($_POST['price'] ?? '');
         $location         = trim($_POST['location'] ?? '');
         $description      = trim($_POST['description'] ?? '');
         $property_type    = $_POST['property_type'] ?? '';
         $transaction_type = $_POST['transaction_type'] ?? '';
+
+
         // Validation des valeurs externalisé
 
         require 'includes/_validationFORM.php';
 
+        // envoi de l'image avec la gestion de ses erreurs
+
+      if (!empty($_FILES['image']['name'])) //Si l’utilisateur n’a rien mis, alors name est vide 
+      {require 'includes/_sendImage.php';
+        // $dest sstdéfini dans _sendImage.php
+} else {
+    // Pas de nouvelle image ; on garde l'ancien chemin
+    $dest = $product['image_url'];
+}
+        
         // update DES DONNEES SI PAS ERREURS
 
         if (empty($errors)) {
@@ -95,7 +107,7 @@
             $stmt->bindValue(':description', $description);
             $stmt->bindValue(':price', $price, PDO::PARAM_INT);
             $stmt->bindValue(':location', $location);
-            $stmt->bindValue(':image_url', $image_url);
+            $stmt->bindValue(':image_url', $dest);//recuperé dans _sendImage
             $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
             $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
             $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
@@ -149,7 +161,7 @@
                     ?>
                 </p>
 
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" minlength="5" maxlength="50" required
                         value="<?php echo $product['title'] ?? ''; ?>">
@@ -158,12 +170,11 @@
                         <?php echo $errors['title'] ?? '' ?>
                     </span>
 
-                    <label for="imageUpload">URL image:</label>
-                    <input type="text" id="image_url" name="image_url" required
-                        value="<?php echo $product['image_url'] ?? ''; ?>">
+                      <label for="imageUpload">Image:</label>
+                    <input type="file" name="image" id="imageUpload">
                     <!-- Affichage de l'erreur -->
-                    <span class="error" id="UrlError">
-                        <?php echo $errors['url'] ?? '' ?>
+                    <span class="error" id="imageError">
+                        <?php echo $errors['image'] ?? '' ?>
                     </span>
 
 
