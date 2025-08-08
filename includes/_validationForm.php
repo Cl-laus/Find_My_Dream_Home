@@ -7,10 +7,10 @@
             $errors['title'] = "Le titre est trop court ou trop long";
         }
         if (empty($image_url)) {
-            $errors['url'] = "L'URL de l'image est requise";
+            $errors['image'] = "une image est requise";
             // validation de l'url
         } elseif (! filter_var($image_url, FILTER_VALIDATE_URL)) {
-            $errors['url'] = "L'URL fournie n'est pas valide";
+            $errors['image'] = "L'image fournie n'est pas valide";
         }
         if (empty($price)) {
             $errors['price'] = "Le prix est requis";

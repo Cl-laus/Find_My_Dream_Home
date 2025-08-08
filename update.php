@@ -9,7 +9,26 @@
     $user_role = $_SESSION['role'];
     $articleId = $_GET['id'];
 
-    // recuperes les datas avec l'id correspondant
+    // Vérifier si l'utilisateur à les droits
+
+    if (empty($_SESSION['isLoggedIn']) || ! ($user_role === "admin" || $user_id === $product['user_id'])) {
+        //  redirection si pas les droits de modifier
+        $_SESSION['index_message'] = "Vous devez être connecté en tant qu' admin ou etre le créateur pour modifier cette annonce.";
+        header('Location: index.php');
+        exit;
+
+    }
+
+    // Récupérer property et transaction type dans la BDD, pour l'injecter plus bas dans le HTML
+    $sql           = "SELECT id, name FROM propertytype";
+    $stmt          = $pdo->query($sql);
+    $propertyTypes = $stmt->fetchAll();
+
+    $sql              = "SELECT id, name FROM transactiontype";
+    $stmt             = $pdo->query($sql);
+    $transactionTypes = $stmt->fetchAll();
+
+    // recuperes les datas avec l'id correspondant pour les injecter dans le HTML
     $sql = 'SELECT l.*,
                    pt.name AS property_type,
                    tt.name AS transaction_type
@@ -32,13 +51,6 @@
     $property_type    = $product['property_type_id'];
     $transaction_type = $product['transaction_type_id'];
 
-    if (empty($_SESSION['isLoggedIn']) || ! ($user_role === "admin" || $user_id === $product['user_id'])) {
-        //  redirection si pas les droits de modifier
-        $_SESSION['error_message'] = "Vous devez être connecté en tant qu' admin ou etre le créateur pour modifier cette annonce.";
-        header('Location: index.php');
-        exit;
-
-    }
 ?>
 
 
@@ -47,7 +59,7 @@
 
 <?php
     $errors = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title            = trim($_POST['title'] ?? '');
         $image_url        = trim($_POST['image_url'] ?? '');
         $price            = trim($_POST['price'] ?? '');
@@ -55,19 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description      = trim($_POST['description'] ?? '');
         $property_type    = $_POST['property_type'] ?? '';
         $transaction_type = $_POST['transaction_type'] ?? '';
-    // Validation externalisé
+        // Validation des valeurs externalisé
 
-     require 'includes/_validationFORM.php';
-    
+        require 'includes/_validationFORM.php';
 
-    // update DES DONNEES SI PAS ERREURS
+        // update DES DONNEES SI PAS ERREURS
 
-    if (empty($errors)) {
+        if (empty($errors)) {
 
-        // Préparer lA DATE AU FORMAT SQL
-        $now = date('Y-m-d H:i:s');
+            // Préparer lA DATE AU FORMAT SQL
+            $now = date('Y-m-d H:i:s');
 
-        $stmt = $pdo->prepare("
+            $stmt = $pdo->prepare("
                 UPDATE listing SET
         title = :title,
         description = :description,
@@ -79,23 +90,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updated_at = :updated_at
     WHERE id = :articleId
                 ");
-        // LIE LES VALEURS, pour secure
-        $stmt->bindValue(':title', $title);
-        $stmt->bindValue(':description', $description);
-        $stmt->bindValue(':price', $price, PDO::PARAM_INT);
-        $stmt->bindValue(':location', $location);
-        $stmt->bindValue(':image_url', $image_url);
-        $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
-        $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
-        $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
+            // LIE LES VALEURS, pour secure
+            $stmt->bindValue(':title', $title);
+            $stmt->bindValue(':description', $description);
+            $stmt->bindValue(':price', $price, PDO::PARAM_INT);
+            $stmt->bindValue(':location', $location);
+            $stmt->bindValue(':image_url', $image_url);
+            $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
+            $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
+            $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
 
-        $stmt->bindValue(':updated_at', $now);
-    // envoie des données
-        $stmt->execute();
+            $stmt->bindValue(':updated_at', $now);
+            // envoie des données
+            $stmt->execute();
 
-    // Maj des données dans le HTML si l'utilsateur veut continuer les modifs
+            // Maj des données dans le HTML si l'utilsateur veut continuer les modifs
 
-$sql = 'SELECT l.*,
+            $sql = 'SELECT l.*,
                pt.name AS property_type,
                tt.name AS transaction_type
         FROM listing l
@@ -103,16 +114,16 @@ $sql = 'SELECT l.*,
         JOIN transactionType tt ON l.transaction_type_id = tt.id
         WHERE l.id = :articleId';
 
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
-$stmt->execute();
-$product = $stmt->fetch();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
+            $stmt->execute();
+            $product = $stmt->fetch();
 
-// PETIT MSG DE valid
-        
-        $_SESSION['successUpdate'] = "Votre annonce a bien été update.";
+            // PETIT MSG DE valid
+
+            $_SESSION['successUpdate'] = "Votre annonce a bien été update.";
+        }
     }
-}
 ?>
 
 
@@ -183,15 +194,31 @@ $product = $stmt->fetch();
                     <label for="property_type">Type de propriété:</label>
                     <select id="property_type" name="property_type" required>
                         <option value="" disabled selected hidden>--select type--</option>
-                        <option value="1">House</option>
-                        <option value="2">Appartement</option>
+                        <?php foreach ($propertyTypes as $type): ?>
+                        <option value="<?php echo $type['id']; ?>"
+                            <?php if ($property_type === $type['id']) {
+                                    echo "selected";
+                            }
+                            // le select est un parametre de la balise select,option?>>
+
+                            <?php echo strtolower($type['name']); // formatage en minuscule ?>
+                        </option>
+                        <?php endforeach; ?>
                     </select>
 
                     <label for="transaction_type">Type de transaction:</label>
                     <select id="transaction_type" name="transaction_type" required>
                         <option value="" disabled selected hidden>--select type--</option>
-                        <option value="1">Sale</option>
-                        <option value="2">Rent</option>
+                        <?php foreach ($transactionTypes as $type): ?>
+                        <option value="<?php echo $type['id']; ?>"
+                            <?php if ($transaction_type === $type['id']) {
+                                    echo "selected";
+                            }
+                            ?>>
+
+                            <?php echo strtolower($type['name']); ?>
+                        </option>
+                        <?php endforeach; ?>
                     </select>
 
                     <button type="submit">Enregistrer</button>

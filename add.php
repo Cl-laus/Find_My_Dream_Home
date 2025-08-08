@@ -9,12 +9,28 @@
     // Vérifier si l'utilisateur est connecté
     if (empty($_SESSION['isLoggedIn']) || ($user_role !== "admin" && $user_role !== "agent")) {
         //  redirection
-        $_SESSION['error_message'] = "Vous devez être connecté en tant qu'agent ou admin pour accéder à cette page.";
+        $_SESSION['index_message'] = "Vous devez être connecté en tant qu'agent ou admin pour accéder à cette page.";
         header('Location: index.php');
         exit;
     }
-// ?>
+?>
 
+
+<?php
+    // Récupérer property et transaction type dans la BDD, pour l'injecter plus bas dans le html
+    $sql           = "SELECT id, name FROM propertytype";
+    $stmt          = $pdo->query($sql);
+    $propertyTypes = $stmt->fetchAll(); //recuperes les propertyTypes dans un Array
+
+    $sql              = "SELECT id, name FROM transactiontype";
+    $stmt             = $pdo->query($sql);
+    $transactionTypes = $stmt->fetchAll();
+
+?>
+
+
+
+<!-- ENVOI A LA BDD  -->
 <?php
     $errors = [];
 
@@ -29,40 +45,41 @@
 
         // Validation externalisé
         require 'includes/_validationFORM.php';
-    
 
-    // ENVOI DES DONNEES SI PAS ERREURS
+        // ENVOI DES DONNEES SI PAS ERREURS
 
-    if (empty($errors) && ($_SESSION['isLoggedIn'])) {
+        if (empty($errors) && ($_SESSION['isLoggedIn'])) {
 
-        // Préparer lA DATE AU FORMAT SQL
-        $now = date('Y-m-d H:i:s');
+            // Préparer lA DATE AU FORMAT SQL
+            $now = date('Y-m-d H:i:s');
 
-        $stmt = $pdo->prepare("
+            $stmt = $pdo->prepare("
                 INSERT INTO listing
                 (title, description, price, location, image_url, property_type_id, transaction_type_id, user_id, created_at, updated_at)
                 VALUES
                 (:title, :description, :price, :location, :image_url, :property_type_id, :transaction_type_id, :user_id, :created_at, :updated_at)
                 ");
-        // LIE LES VALEURS, pour secure
-        $stmt->bindValue(':title', $title);
-        $stmt->bindValue(':description', $description);
-        $stmt->bindValue(':price', $price, PDO::PARAM_INT);
-        $stmt->bindValue(':location', $location);
-        $stmt->bindValue(':image_url', $image_url);
-        $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
-        $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
-        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->bindValue(':created_at', $now);
-        $stmt->bindValue(':updated_at', $now);
-        // envoie des données
-        $stmt->execute();
+            // LIE LES VALEURS, pour secure
+            $stmt->bindValue(':title', $title);
+            $stmt->bindValue(':description', $description);
+            $stmt->bindValue(':price', $price, PDO::PARAM_INT);
+            $stmt->bindValue(':location', $location);
+            $stmt->bindValue(':image_url', $image_url);
+            $stmt->bindValue(':property_type_id', $property_type, PDO::PARAM_INT);
+            $stmt->bindValue(':transaction_type_id', $transaction_type, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindValue(':created_at', $now);
+            $stmt->bindValue(':updated_at', $now);
+            // envoie des données
+            $stmt->execute();
 
-        $success = "Votre annonce a bien été enregistrée.";
-    }
+            $success = "Votre annonce a bien été enregistrée.";
+        }
     }
 
 ?>
+
+<!-- ////////////////////HTML //////////////////////-->
 
 
 <body>
@@ -88,7 +105,7 @@
                     <input type="text" id="image_url" name="image_url" required>
                     <!-- Affichage de l'erreur -->
                     <span class="error" id="UrlError">
-                        <?php echo $errors['url'] ?? '' ?>
+                        <?php echo $errors['image'] ?? '' ?>
                     </span>
 
 
@@ -116,15 +133,21 @@
                     <label for="property_type">Type de propriété:</label>
                     <select id="property_type" name="property_type" required>
                         <option value="" disabled selected hidden>--select type--</option>
-                        <option value="1">House</option>
-                        <option value="2">Appartement</option>
+                        <?php foreach ($propertyTypes as $type): ?>
+                        <option value="<?php echo $type['id']; ?>">
+                            <?php echo strtolower($type['name']); // formatage en minuscule ?> 
+                        </option>
+                        <?php endforeach; ?>
                     </select>
 
                     <label for="transaction_type">Type de transaction:</label>
                     <select id="transaction_type" name="transaction_type" required>
                         <option value="" disabled selected hidden>--select type--</option>
-                        <option value="1">Sale</option>
-                        <option value="2">Rent</option>
+                        <?php foreach ($transactionTypes as $type): ?>
+                        <option value="<?php echo $type['id']; ?>">
+                            <?php echo strtolower( $type['name']); ?>
+                        </option>
+                        <?php endforeach; ?>
                     </select>
 
                     <button type="submit">Enregistrer</button>

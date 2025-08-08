@@ -21,8 +21,8 @@ JOIN transactionType tt ON l.transaction_type_id = tt.id;';
 
         <span class="error" >
          <!-- affiche un message d'erreur si on a pas les droits d'acces -->
-           <?php echo $_SESSION['error_message'] ?? '';
-           unset($_SESSION['error_message']); ?>
+           <?php echo $_SESSION['index_message'] ?? '';
+           unset($_SESSION['index_message']); ?>
        </span>
 
         <div id="articles-page">
