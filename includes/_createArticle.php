@@ -1,3 +1,6 @@
+
+
+
 <article>
     <header>
         <img src="<?php echo $product['image_url'] ?>" alt="" />
@@ -13,8 +16,8 @@
     </p>
 
     <div id=button-container>
-        <button>Favori</button>
-        <!-- on utilise post pour la securité, donc obligé d'utiliser un form -->
+        <a href="updateFavoris.php?id=<?php echo $product['id'] ?>" class="link">Favori</a>
+       <!-- <?php echo $isFavorited ? '❤️' : '🤍'; ?> -->
         <a href="delete.php?id=<?php echo $product['id'] ?>" class="link">Supprimer</a>
         <a href="update.php?id=<?php echo $product['id'] ?>" class="link">Modifier</a>
     </div>

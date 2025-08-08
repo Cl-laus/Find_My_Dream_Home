@@ -1,5 +1,6 @@
 <?php session_start(); ?>
 <?php require_once 'includes/_header.php'; ?>
+<?php require_once 'includes/_pdo_connect.php'; ?>
 <!-- <script src="script/check_auth.js" defer></script> -->
 
 
@@ -30,10 +31,29 @@
             $errors['confirmPassword'] = "Le mot de passe de confirmation ne correspond pas";
 
         }
-        if (empty($errors)) {
-            $errors['Status'] = "Votre annonce est en cours de traitement.";
-        }
+     
 
+        if(empty($errors)){
+               // Préparer lA DATE AU FORMAT SQL
+            $now = date('Y-m-d H:i:s');
+
+            $stmt = $pdo->prepare("
+                INSERT INTO user
+                (email, password, created_at, updated_at)
+                VALUES
+                (:email, :password, :created_at, :updated_at)
+                ");
+            // LIE LES VALEURS, pour secure
+            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':password', $password );
+          
+            $stmt->bindValue(':created_at', $now);
+            $stmt->bindValue(':updated_at', $now);
+            // envoie des données
+            $stmt->execute();
+
+            $success = "Votre compte a bien été enregistrée.";
+        }
     }
 
 ?>
@@ -50,7 +70,7 @@
                 <h2>Connexion à Find My Dream Home</h2>
                 <!-- Affichage du message d'envoi si pas d'erreurs -->
                 <p class="validMsg">
-                    <?php echo $errors['Status'] ?? '' ?>
+                    <?php echo $success ?? '' ?>
                 </p>
 
 

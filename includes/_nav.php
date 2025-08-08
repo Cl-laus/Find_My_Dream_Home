@@ -15,6 +15,7 @@
                 echo '<div class="link"><a href="login.php">Login</a></div>';
             } else {
                 echo '<div class="link"><a href="add.php">Add</a></div>';
+                echo '<div class="link"><a href="favoris.php">Mes Favoris</a></div>';
                 echo '<div id="logout"><a href="logout.php">Logout</a></div>';
             }
         ?>
